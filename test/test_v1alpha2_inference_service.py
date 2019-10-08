@@ -30,12 +30,12 @@ from __future__ import absolute_import
 import unittest
 
 import kfserving
-from kfserving.models.v1alpha2_kf_service_list import V1alpha2KFServiceList  # noqa: E501
+from kfserving.models.v1alpha2_inference_service import V1alpha2InferenceService  # noqa: E501
 from kfserving.rest import ApiException
 
 
-class TestV1alpha2KFServiceList(unittest.TestCase):
-    """V1alpha2KFServiceList unit test stubs"""
+class TestV1alpha2InferenceService(unittest.TestCase):
+    """V1alpha2InferenceService unit test stubs"""
 
     def setUp(self):
         pass
@@ -43,10 +43,10 @@ class TestV1alpha2KFServiceList(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def testV1alpha2KFServiceList(self):
-        """Test V1alpha2KFServiceList"""
+    def testV1alpha2InferenceService(self):
+        """Test V1alpha2InferenceService"""
         # FIXME: construct object with mandatory attributes with example values
-        # model = kfserving.models.v1alpha2_kf_service_list.V1alpha2KFServiceList()  # noqa: E501
+        # model = kfserving.models.v1alpha2_inference_service.V1alpha2InferenceService()  # noqa: E501
         pass
 
 
