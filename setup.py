@@ -20,9 +20,6 @@ TESTS_REQUIRES = [
     'mypy'
 ]
 
-with open('requirements.txt') as f:
-    REQUIRES = f.readlines()
-
 setuptools.setup(
     name='kfserving',
     version='0.4.0',
@@ -59,7 +56,22 @@ setuptools.setup(
         'Topic :: Software Development :: Libraries',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    install_requires=REQUIRES,
+    install_requires=[
+        'certifi>=15.05.14',
+        'six==1.15',
+        'python_dateutil>=2.5.3',
+        'setuptools>=21.0.0',
+        'urllib3>=1.15.1',
+        'kubernetes==10.0.1',
+        'tornado>=6.0.0',
+        'argparse>=1.4.0',
+        'minio>=4.0.9',
+        'google-cloud-storage>=1.31.0',
+        'adal>=1.2.2',
+        'table_logger>=0.3.5',
+        'numpy>=1.17.3',
+        'azure-storage-blob>=12.0.0',
+    ],
     tests_require=TESTS_REQUIRES,
     extras_require={'test': TESTS_REQUIRES}
 )

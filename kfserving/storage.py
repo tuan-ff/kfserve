@@ -18,7 +18,7 @@ import tempfile
 import os
 import re
 from urllib.parse import urlparse
-from azure.storage.blob import BlockBlobService
+# from azure.storage.blob import BlockBlobService
 from google.auth import exceptions
 from google.cloud import storage
 from minio import Minio
@@ -48,8 +48,8 @@ class Storage(object): # pylint: disable=too-few-public-methods
             Storage._download_gcs(uri, out_dir)
         elif uri.startswith(_S3_PREFIX):
             Storage._download_s3(uri, out_dir)
-        elif re.search(_BLOB_RE, uri):
-            Storage._download_blob(uri, out_dir)
+        # elif re.search(_BLOB_RE, uri):
+        #     Storage._download_blob(uri, out_dir)
         elif is_local:
             return Storage._download_local(uri, out_dir)
         else:
@@ -115,46 +115,46 @@ The path or model %s does not exist." % (uri))
             raise RuntimeError("Failed to fetch model. \
 The path or model %s does not exist." % (uri))
 
-    @staticmethod
-    def _download_blob(uri, out_dir: str): # pylint: disable=too-many-locals
-        match = re.search(_BLOB_RE, uri)
-        account_name = match.group(1)
-        storage_url = match.group(2)
-        container_name, prefix = storage_url.split("/", 1)
-
-        logging.info("Connecting to BLOB account: [%s], container: [%s], prefix: [%s]",
-                     account_name,
-                     container_name,
-                     prefix)
-        try:
-            block_blob_service = BlockBlobService(account_name=account_name)
-            blobs = block_blob_service.list_blobs(container_name, prefix=prefix)
-        except Exception: # pylint: disable=broad-except
-            token = Storage._get_azure_storage_token()
-            if token is None:
-                logging.warning("Azure credentials not found, retrying anonymous access")
-            block_blob_service = BlockBlobService(account_name=account_name, token_credential=token)
-            blobs = block_blob_service.list_blobs(container_name, prefix=prefix)
-        count = 0
-        for blob in blobs:
-            dest_path = os.path.join(out_dir, blob.name)
-            if "/" in blob.name:
-                head, tail = os.path.split(blob.name)
-                if prefix is not None:
-                    head = head[len(prefix):]
-                if head.startswith('/'):
-                    head = head[1:]
-                dir_path = os.path.join(out_dir, head)
-                dest_path = os.path.join(dir_path, tail)
-                if not os.path.isdir(dir_path):
-                    os.makedirs(dir_path)
-
-            logging.info("Downloading: %s to %s", blob.name, dest_path)
-            block_blob_service.get_blob_to_path(container_name, blob.name, dest_path)
-            count = count + 1
-        if count == 0:
-            raise RuntimeError("Failed to fetch model. \
-The path or model %s does not exist." % (uri))
+#     @staticmethod
+#     def _download_blob(uri, out_dir: str): # pylint: disable=too-many-locals
+#         match = re.search(_BLOB_RE, uri)
+#         account_name = match.group(1)
+#         storage_url = match.group(2)
+#         container_name, prefix = storage_url.split("/", 1)
+#
+#         logging.info("Connecting to BLOB account: [%s], container: [%s], prefix: [%s]",
+#                      account_name,
+#                      container_name,
+#                      prefix)
+#         try:
+#             block_blob_service = BlockBlobService(account_name=account_name)
+#             blobs = block_blob_service.list_blobs(container_name, prefix=prefix)
+#         except Exception: # pylint: disable=broad-except
+#             token = Storage._get_azure_storage_token()
+#             if token is None:
+#                 logging.warning("Azure credentials not found, retrying anonymous access")
+#             block_blob_service = BlockBlobService(account_name=account_name, token_credential=token)
+#             blobs = block_blob_service.list_blobs(container_name, prefix=prefix)
+#         count = 0
+#         for blob in blobs:
+#             dest_path = os.path.join(out_dir, blob.name)
+#             if "/" in blob.name:
+#                 head, tail = os.path.split(blob.name)
+#                 if prefix is not None:
+#                     head = head[len(prefix):]
+#                 if head.startswith('/'):
+#                     head = head[1:]
+#                 dir_path = os.path.join(out_dir, head)
+#                 dest_path = os.path.join(dir_path, tail)
+#                 if not os.path.isdir(dir_path):
+#                     os.makedirs(dir_path)
+#
+#             logging.info("Downloading: %s to %s", blob.name, dest_path)
+#             block_blob_service.get_blob_to_path(container_name, blob.name, dest_path)
+#             count = count + 1
+#         if count == 0:
+#             raise RuntimeError("Failed to fetch model. \
+# The path or model %s does not exist." % (uri))
 
     @staticmethod
     def _get_azure_storage_token():
